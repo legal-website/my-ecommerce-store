@@ -68,30 +68,43 @@ export function CategorySection() {
   const [isInView, setIsInView] = useState(false)
   const [featuredIndex, setFeaturedIndex] = useState(0)
   const [isChanging, setIsChanging] = useState(false)
+  const [isScrollActive, setIsScrollActive] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Auto-rotate featured category
+  // Set random initial featured category and use 15 second timer
   useEffect(() => {
+    // Set random initial category on page load
+    setFeaturedIndex(Math.floor(Math.random() * allCategories.length))
+
     const interval = setInterval(() => {
       setIsChanging(true)
       setTimeout(() => {
         setFeaturedIndex((prev) => (prev + 1) % allCategories.length)
         setIsChanging(false)
       }, 300)
-    }, 4000) // Change every 4 seconds
+    }, 15000) // Changed to 15 seconds
 
     return () => clearInterval(interval)
   }, [])
 
+  // Intersection observer to detect when section is properly visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-        }
+        const rect = entry.boundingClientRect
+        const windowHeight = window.innerHeight
+
+        // Check if section is properly visible
+        const isProperlyVisible = rect.top < windowHeight * 0.6 && rect.bottom > windowHeight * 0.4
+
+        setIsInView(entry.isIntersecting)
+        setIsScrollActive(entry.isIntersecting && isProperlyVisible)
       },
-      { threshold: 0.2 },
+      {
+        threshold: [0.1, 0.3, 0.5, 0.7], // Multiple thresholds for smooth detection
+        rootMargin: "-5% 0px -5% 0px", // Smaller margin for better detection
+      },
     )
 
     if (sectionRef.current) {
@@ -99,6 +112,48 @@ export function CategorySection() {
     }
 
     return () => observer.disconnect()
+  }, [])
+
+  // Global scroll hijacking for entire section area
+  useEffect(() => {
+    const handleGlobalWheel = (e: WheelEvent) => {
+      if (!scrollContainerRef.current || !sectionRef.current) return
+
+      // Check if section is in viewport
+      const sectionRect = sectionRef.current.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+
+      // Section is considered active when it's prominently visible (at least 40% in view)
+      const sectionTop = sectionRect.top
+      const sectionBottom = sectionRect.bottom
+      const isInViewport = sectionTop < windowHeight * 0.6 && sectionBottom > windowHeight * 0.4
+
+      if (!isInViewport) return
+
+      const container = scrollContainerRef.current
+      const canScrollDown = container.scrollTop < container.scrollHeight - container.clientHeight
+      const canScrollUp = container.scrollTop > 0
+
+      // Hijack scroll when section is visible and container can scroll
+      if ((e.deltaY > 0 && canScrollDown) || (e.deltaY < 0 && canScrollUp)) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        // Smooth scroll with enhanced easing
+        const scrollAmount = e.deltaY * 1.2
+        container.scrollBy({
+          top: scrollAmount,
+          behavior: "auto",
+        })
+      }
+    }
+
+    // Always add the event listener when component mounts
+    document.addEventListener("wheel", handleGlobalWheel, { passive: false, capture: true })
+
+    return () => {
+      document.removeEventListener("wheel", handleGlobalWheel, { capture: true })
+    }
   }, [])
 
   const CategoryCard = ({ category, index, delay = 0 }: { category: any; index: number; delay?: number }) => (
@@ -111,7 +166,8 @@ export function CategorySection() {
         transitionDelay: `${delay + index * 150}ms`,
       }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      {/* Reduced height by 20px - changed from aspect-[4/3] to custom height */}
+      <div className="relative h-[220px] overflow-hidden">
         <Image
           src={category.image || "/placeholder.svg"}
           alt={category.name}
@@ -205,16 +261,17 @@ export function CategorySection() {
               Browse All Categories
             </h3>
 
-            {/* Scrollable Container - Exactly 4 categories visible (2x2) */}
+            {/* Scrollable Container - Enhanced for better scroll detection */}
             <div
               ref={scrollContainerRef}
-              className={`h-[520px] overflow-y-scroll scrollbar-hide transition-all duration-300 ${
+              className={`h-[600px] overflow-y-scroll scrollbar-hide transition-all duration-500 ${
                 isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-              }`}
+              } ${isScrollActive ? "ring-2 ring-[#C53D39]/30 ring-offset-4 shadow-lg" : "shadow-sm"}`}
               style={{
                 transitionDelay: "400ms",
                 scrollbarWidth: "none" /* Firefox */,
                 msOverflowStyle: "none" /* Internet Explorer 10+ */,
+                scrollBehavior: "auto", // Ensure smooth scrolling is handled by our custom logic
               }}
             >
               {/* Categories Grid */}
@@ -234,15 +291,21 @@ export function CategorySection() {
               </div>
             </div>
 
-            {/* Scroll hint */}
+            {/* Subtle scroll hint */}
             <div
               className={`text-center transition-all duration-1000 delay-600 ${
                 isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                <div className="w-1 h-6 bg-gradient-to-b from-[#C53D39] to-[#F1BA69] rounded-full animate-pulse"></div>
-                <span className="font-poppins">Scroll to explore more categories</span>
+                <div
+                  className={`w-1 h-6 rounded-full transition-all duration-300 ${
+                    isScrollActive ? "bg-gradient-to-b from-[#C53D39] to-[#F1BA69] animate-pulse" : "bg-gray-300"
+                  }`}
+                ></div>
+                <span className="font-poppins">
+                  {isScrollActive ? "Scroll anywhere to explore categories" : "Scroll to explore more categories"}
+                </span>
               </div>
             </div>
           </div>
@@ -262,10 +325,12 @@ export function CategorySection() {
                 href={`/category/${featuredCategory.id}`}
                 className={`group relative overflow-hidden rounded-3xl bg-white shadow-2xl hover:shadow-3xl transition-all duration-700 transform hover:-translate-y-4 border border-gray-100 block ${
                   isInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"
-                } ${isChanging ? "scale-95 opacity-80" : "scale-100 opacity-100"}`}
+                } ${isChanging ? "scale-95 opacity-80" : "scale-100 opacity-100"} ${
+                  isScrollActive ? "ring-2 ring-[#C53D39]/20 ring-offset-4" : ""
+                }`}
                 style={{
                   transitionDelay: "600ms",
-                  height: "520px", // Match the scrollable container height
+                  height: "640px", // Reduced by 40px from 680px
                 }}
               >
                 <div className="relative h-full overflow-hidden">
@@ -294,31 +359,21 @@ export function CategorySection() {
                     </span>
                   </div>
 
-                  {/* Auto-rotation indicator */}
-                  <div className="absolute top-6 right-6 flex space-x-1">
-                    {allCategories.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          index === featuredIndex ? "bg-[#F1BA69] w-6" : "bg-white/40"
-                        }`}
-                      />
-                    ))}
-                  </div>
-
                   {/* Floating particles */}
                   <div className="absolute top-1/4 right-8 w-3 h-3 bg-[#F1BA69] rounded-full opacity-60 group-hover:opacity-100 transition-all duration-300 animate-bounce"></div>
                   <div className="absolute top-1/2 right-12 w-2 h-2 bg-[#C53D39] rounded-full opacity-40 group-hover:opacity-80 transition-all duration-500 animate-bounce delay-300"></div>
                   <div className="absolute top-3/4 right-6 w-1 h-1 bg-white rounded-full opacity-60 group-hover:opacity-100 transition-all duration-400 animate-pulse"></div>
 
-                  {/* Sticky indicator */}
-                  <div className="absolute top-1/2 left-6 transform -translate-y-1/2">
-                    <div className="flex flex-col items-center space-y-2 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-1 h-8 bg-white/60 rounded-full"></div>
-                      <div className="w-2 h-2 bg-[#F1BA69] rounded-full animate-pulse"></div>
-                      <div className="w-1 h-8 bg-white/60 rounded-full"></div>
+                  {/* Subtle scroll indicator */}
+                  {isScrollActive && (
+                    <div className="absolute top-1/2 left-6 transform -translate-y-1/2">
+                      <div className="flex flex-col items-center space-y-1 opacity-60 transition-opacity duration-300">
+                        <div className="w-0.5 h-4 bg-[#F1BA69]/60 rounded-full"></div>
+                        <div className="w-1 h-1 bg-[#F1BA69] rounded-full animate-pulse"></div>
+                        <div className="w-0.5 h-4 bg-[#F1BA69]/60 rounded-full"></div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -370,7 +425,7 @@ export function CategorySection() {
               >
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                   <div className="w-2 h-2 bg-gradient-to-r from-[#C53D39] to-[#F1BA69] rounded-full animate-pulse"></div>
-                  <span className="font-poppins">Sticky • Auto-rotating every 4 seconds</span>
+                  <span className="font-poppins">Sticky • Auto-rotating every 15 seconds</span>
                 </div>
               </div>
             </div>
