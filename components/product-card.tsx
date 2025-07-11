@@ -23,9 +23,10 @@ interface Product {
 
 interface ProductCardProps {
   product: Product
+  onQuickView?: (product: Product) => void
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, onQuickView }: ProductCardProps) {
   const { addToCart } = useCart()
   const [isHovered, setIsHovered] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
@@ -60,15 +61,25 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Wishlist button */}
-        <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
-          className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-            isWishlisted ? "bg-[#C53D39] text-white" : "bg-white/90 text-gray-600 hover:bg-[#C53D39] hover:text-white"
-          }`}
-        >
-          <Heart className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`} />
-        </button>
+        {/* Wishlist and Compare buttons - stacked vertically */}
+        <div className="absolute top-3 right-3 flex flex-col space-y-2">
+          <button
+            onClick={() => setIsWishlisted(!isWishlisted)}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+              isWishlisted ? "bg-[#C53D39] text-white" : "bg-white/90 text-gray-600 hover:bg-[#C53D39] hover:text-white"
+            }`}
+          >
+            <Heart className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`} />
+          </button>
+
+          <button
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+              isHovered ? "opacity-100 bg-white/90 hover:bg-[#C53D39] hover:text-white" : "opacity-0"
+            } text-gray-600`}
+          >
+            <BarChart3 className="h-4 w-4" />
+          </button>
+        </div>
 
         {/* Quick action buttons - appear on hover */}
         <div
@@ -80,6 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
             variant="secondary"
             size="sm"
             className="w-full bg-white/95 hover:bg-white text-gray-900 text-xs py-2 h-8"
+            onClick={() => onQuickView?.(product)}
           >
             <Eye className="h-3 w-3 mr-1" />
             Quick View
@@ -94,15 +106,6 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.isSoldOut ? "Sold Out" : "Quick Shop"}
           </Button>
         </div>
-
-        {/* Compare button - bottom right corner */}
-        <button
-          className={`absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-            isHovered ? "opacity-100 bg-white/90 hover:bg-[#C53D39] hover:text-white" : "opacity-0"
-          } text-gray-600`}
-        >
-          <BarChart3 className="h-4 w-4" />
-        </button>
       </div>
 
       {/* Product info */}

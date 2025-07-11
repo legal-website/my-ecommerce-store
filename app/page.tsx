@@ -1,57 +1,67 @@
-import { ProductGrid } from "@/components/product-grid"
-import { Hero } from "@/components/hero"
+"use client"
+
+import { HeroCarousel } from "@/components/hero-carousel"
+import { CircularCategories } from "@/components/circular-categories"
+import { ProductCarousel } from "@/components/product-carousel"
+import { ShopByRoom } from "@/components/shop-by-room"
+import { OurClients } from "@/components/our-clients"
 
 const products = [
   {
-    id: "1",
-    name: "Modern Sectional Sofa",
-    price: 1299.99,
-    originalPrice: 1599.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Hover",
-    description: "Luxurious sectional sofa with premium fabric upholstery and ergonomic design",
-    rating: 4.8,
+    id: "hero-1",
+    name: "Luxe Sectional Sofa",
+    price: 2299.99,
+    originalPrice: 2899.99,
+    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=400&h=400&fit=crop",
+    description: "Premium leather sectional with ergonomic design and built-in USB charging ports",
+    rating: 4.9,
     isOnSale: true,
-    discount: 19,
+    discount: 21,
   },
   {
-    id: "2",
-    name: "Ergonomic Office Chair",
-    price: 599.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Chair",
-    description: "Professional office chair with lumbar support and adjustable height",
-    rating: 4.6,
-  },
-  {
-    id: "3",
-    name: "Dining Table Set",
+    id: "hero-2",
+    name: "Executive Office Chair",
     price: 899.99,
     originalPrice: 1199.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Table",
-    description: "Elegant 6-seater dining table with matching chairs in oak finish",
-    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1541558869434-2840d308329a?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+    description: "Ergonomic office chair with lumbar support and premium materials",
+    rating: 4.8,
     isOnSale: true,
     discount: 25,
   },
   {
-    id: "4",
-    name: "King Size Bed Frame",
-    price: 799.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Bed",
-    description: "Solid wood king size bed frame with upholstered headboard",
+    id: "hero-3",
+    name: "Modern Dining Set",
+    price: 1599.99,
+    originalPrice: 1999.99,
+    image: "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&h=400&fit=crop",
+    description: "Contemporary 8-seater dining table with matching chairs in oak finish",
     rating: 4.7,
-    isSoldOut: true,
+    isOnSale: true,
+    discount: 20,
+  },
+  {
+    id: "hero-4",
+    name: "King Platform Bed",
+    price: 1299.99,
+    originalPrice: 1699.99,
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop",
+    description: "Minimalist king size platform bed with integrated nightstands",
+    rating: 4.6,
+    isOnSale: true,
+    discount: 24,
   },
   {
     id: "5",
     name: "Coffee Table",
-    price: 299.99,
-    originalPrice: 399.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Coffee",
+    price: 599.99,
+    originalPrice: 799.99,
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
     description: "Modern glass-top coffee table with storage compartment",
     rating: 4.5,
     isOnSale: true,
@@ -61,8 +71,8 @@ const products = [
     id: "6",
     name: "Bookshelf Unit",
     price: 449.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Shelf",
+    image: "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=400&h=400&fit=crop",
     description: "5-tier wooden bookshelf with adjustable shelves",
     rating: 4.4,
   },
@@ -71,8 +81,8 @@ const products = [
     name: "Recliner Chair",
     price: 899.99,
     originalPrice: 1099.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Recliner",
+    image: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=400&h=400&fit=crop",
     description: "Leather recliner chair with massage function and cup holders",
     rating: 4.8,
     isOnSale: true,
@@ -82,8 +92,8 @@ const products = [
     id: "8",
     name: "Wardrobe Cabinet",
     price: 1199.99,
-    image: "/placeholder.svg?height=400&width=400",
-    hoverImage: "/placeholder.svg?height=400&width=400&text=Wardrobe",
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop",
+    hoverImage: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=400&fit=crop",
     description: "Spacious 3-door wardrobe with mirror and multiple compartments",
     rating: 4.6,
   },
@@ -92,10 +102,17 @@ const products = [
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <Hero />
-      <main className="container mx-auto px-4 py-16">
-        <ProductGrid products={products} />
+      <HeroCarousel />
+      <CircularCategories />
+      <main className="container mx-auto px-4 py-16" id="products-section">
+        <ProductCarousel
+          products={products}
+          title="Best Seller Products"
+          subtitle="Discover our most popular furniture pieces that combine style, comfort, and quality craftsmanship"
+        />
       </main>
+      <ShopByRoom />
+      <OurClients />
     </div>
   )
 }
