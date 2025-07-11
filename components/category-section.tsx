@@ -293,7 +293,7 @@ export function CategorySection() {
               <div className="text-center py-8 border-t border-gray-200 mt-6">
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                   <div className="w-2 h-2 bg-gradient-to-r from-[#C53D39] to-[#F1BA69] rounded-full"></div>
-                  <span className="font-poppins">You've reached the end of categories</span>
+                  <span className="font-poppins">{"You've reached the end of categories"}</span>
                   <div className="w-2 h-2 bg-gradient-to-r from-[#C53D39] to-[#F1BA69] rounded-full"></div>
                 </div>
               </div>
