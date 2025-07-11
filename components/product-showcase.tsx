@@ -6,7 +6,22 @@ import { ChevronLeft, ChevronRight, Star, ShoppingBag } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-const showcaseProducts = [
+interface ShowcaseProduct {
+  id: string
+  name: string
+  category: string
+  price: number
+  originalPrice: number
+  discount: number
+  rating: number
+  reviews: number
+  image: string
+  description: string
+  features: string[]
+  colors: string[]
+}
+
+const showcaseProducts: ShowcaseProduct[] = [
   {
     id: "bed-showcase",
     name: "Premium King Size Bed",
@@ -54,26 +69,7 @@ const showcaseProducts = [
 
 export function ProductShowcase() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isInView, setIsInView] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting)
-      },
-      {
-        threshold: 0.2,
-        rootMargin: "0px 0px -10% 0px",
-      },
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   // Auto-play functionality
   useEffect(() => {

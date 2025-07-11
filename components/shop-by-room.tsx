@@ -5,7 +5,14 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
-const rooms = [
+interface Room {
+  id: string
+  name: string
+  image: string
+  isLarge?: boolean
+}
+
+const rooms: Room[] = [
   {
     id: "study-room",
     name: "Study Room",
@@ -122,7 +129,7 @@ export function ShopByRoom() {
             {/* Right Side - 2x2 Grid */}
             <div className="flex-1">
               <div className="grid grid-cols-2 gap-4 h-full">
-                {rooms.slice(1, 5).map((room, index) => (
+                {rooms.slice(1, 5).map((room) => (
                   <Link
                     key={room.id}
                     href={`/room/${room.id}`}

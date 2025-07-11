@@ -5,7 +5,15 @@ import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-const allCategories = [
+interface Category {
+  id: string
+  name: string
+  image: string
+  count: string
+  description: string
+}
+
+const allCategories: Category[] = [
   {
     id: "dining-table",
     name: "Dining Table",
@@ -39,7 +47,7 @@ const allCategories = [
     name: "Beds Collection",
     image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=600&h=500&fit=crop",
     count: "150+ Items",
-    description: "Premium beds for the perfect night&apos;s sleep",
+    description: "Premium beds for the perfect night's sleep",
   },
   {
     id: "work-stations",
@@ -123,7 +131,7 @@ export function CategorySection() {
       const sectionRect = sectionRef.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
 
-      // Section is considered active when it&apos;s prominently visible (at least 40% in view)
+      // Section is considered active when it's prominently visible (at least 40% in view)
       const sectionTop = sectionRect.top
       const sectionBottom = sectionRect.bottom
       const isInViewport = sectionTop < windowHeight * 0.6 && sectionBottom > windowHeight * 0.4
@@ -156,7 +164,7 @@ export function CategorySection() {
     }
   }, [])
 
-  const CategoryCard = ({ category, index, delay = 0 }: { category: any; index: number; delay?: number }) => (
+  const CategoryCard = ({ category, index, delay = 0 }: { category: Category; index: number; delay?: number }) => (
     <Link
       href={`/category/${category.id}`}
       className={`group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-3 border border-gray-100 ${
@@ -285,7 +293,7 @@ export function CategorySection() {
               <div className="text-center py-8 border-t border-gray-200 mt-6">
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                   <div className="w-2 h-2 bg-gradient-to-r from-[#C53D39] to-[#F1BA69] rounded-full"></div>
-                  <span className="font-poppins">You&apos;ve reached the end of categories</span>
+                  <span className="font-poppins">You've reached the end of categories</span>
                   <div className="w-2 h-2 bg-gradient-to-r from-[#C53D39] to-[#F1BA69] rounded-full"></div>
                 </div>
               </div>

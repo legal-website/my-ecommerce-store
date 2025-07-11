@@ -4,7 +4,14 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-const categories = [
+interface Category {
+  id: string
+  name: string
+  image: string
+  count: string
+}
+
+const categories: Category[] = [
   {
     id: "beds",
     name: "Beds",
@@ -81,7 +88,7 @@ export function CircularCategories() {
     return () => observer.disconnect()
   }, [hasAnimated])
 
-  const CategoryCircle = ({ category, index }: { category: any; index: number }) => {
+  const CategoryCircle = ({ category, index }: { category: Category; index: number }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     return (

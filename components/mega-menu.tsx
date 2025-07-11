@@ -40,7 +40,7 @@ export function MegaMenu({ isVisible, onMouseEnter, onMouseLeave }: MegaMenuProp
     >
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-4 gap-8">
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <div key={category.name} className="space-y-4">
               <div className="relative overflow-hidden rounded-lg group">
                 <Image

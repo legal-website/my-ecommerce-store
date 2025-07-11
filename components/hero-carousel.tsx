@@ -90,31 +90,30 @@ export function HeroCarousel() {
 
       // Get exact positions
       const imageRect = productImageElement.getBoundingClientRect()
-      const targetRect = targetImageContainer.getBoundingClientRect()
 
       // Create the floating image element
       const floatingImage = document.createElement("div")
       floatingImage.style.cssText = `
-    position: fixed;
-    left: ${imageRect.left}px;
-    top: ${imageRect.top}px;
-    width: ${imageRect.width}px;
-    height: ${imageRect.height}px;
-    z-index: 1000;
-    border-radius: 24px;
-    overflow: hidden;
-    opacity: 1;
-    transition: all 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    transform: scale(1) rotate(0deg);
-    pointer-events: none;
-  `
+        position: fixed;
+        left: ${imageRect.left}px;
+        top: ${imageRect.top}px;
+        width: ${imageRect.width}px;
+        height: ${imageRect.height}px;
+        z-index: 1000;
+        border-radius: 24px;
+        overflow: hidden;
+        opacity: 1;
+        transition: all 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        transform: scale(1) rotate(0deg);
+        pointer-events: none;
+      `
 
       // Add the image with 100% opacity
       floatingImage.innerHTML = `
-    <img src="${currentProduct.image}" alt="${currentProduct.name}" 
-         style="width: 100%; height: 100%; object-fit: cover; opacity: 1;" />
-  `
+        <img src="${currentProduct.image}" alt="${currentProduct.name}" 
+             style="width: 100%; height: 100%; object-fit: cover; opacity: 1;" />
+      `
 
       document.body.appendChild(floatingImage)
 
@@ -135,14 +134,14 @@ export function HeroCarousel() {
 
         // Apply the transformation with realistic physics
         floatingImage.style.cssText += `
-      left: ${finalLeft}px;
-      top: ${finalTop}px;
-      width: ${finalWidth}px;
-      height: ${finalHeight}px;
-      transform: scale(0.98) rotate(-1deg);
-      opacity: 1;
-      border-radius: 16px;
-    `
+          left: ${finalLeft}px;
+          top: ${finalTop}px;
+          width: ${finalWidth}px;
+          height: ${finalHeight}px;
+          transform: scale(0.98) rotate(-1deg);
+          opacity: 1;
+          border-radius: 16px;
+        `
       }, 200)
 
       // Perfect alignment phase
@@ -150,14 +149,14 @@ export function HeroCarousel() {
         const finalTargetRect = targetImageContainer.getBoundingClientRect()
 
         floatingImage.style.cssText += `
-      left: ${finalTargetRect.left}px;
-      top: ${finalTargetRect.top}px;
-      width: ${finalTargetRect.width}px;
-      height: ${finalTargetRect.height}px;
-      transform: scale(1) rotate(0deg);
-      opacity: 1;
-      border-radius: 12px;
-    `
+          left: ${finalTargetRect.left}px;
+          top: ${finalTargetRect.top}px;
+          width: ${finalTargetRect.width}px;
+          height: ${finalTargetRect.height}px;
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+          border-radius: 12px;
+        `
       }, 2000)
 
       // Fade out and cleanup
@@ -178,13 +177,14 @@ export function HeroCarousel() {
       setTimeout(() => {
         const targetCard = targetElement.closest(".group")
         if (targetCard) {
-          targetCard.style.transform = "translateY(-8px) scale(1.02)"
-          targetCard.style.boxShadow = "0 25px 50px rgba(197, 61, 57, 0.15)"
-          targetCard.style.transition = "all 0.5s ease"
+          const cardElement = targetCard as HTMLElement
+          cardElement.style.transform = "translateY(-8px) scale(1.02)"
+          cardElement.style.boxShadow = "0 25px 50px rgba(197, 61, 57, 0.15)"
+          cardElement.style.transition = "all 0.5s ease"
 
           setTimeout(() => {
-            targetCard.style.transform = ""
-            targetCard.style.boxShadow = ""
+            cardElement.style.transform = ""
+            cardElement.style.boxShadow = ""
           }, 1000)
         }
       }, 2400)
