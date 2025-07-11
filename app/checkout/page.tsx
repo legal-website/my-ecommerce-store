@@ -63,7 +63,7 @@ export default function CheckoutPage() {
                     Order Number: <span className="text-green-600">{orderNumber}</span>
                   </p>
                   <p className="text-gray-600">
-                    Your furniture will be delivered within 3-7 business days. You'll pay cash on delivery.
+                    Your furniture will be delivered within 3-7 business days. You&apos;ll pay cash on delivery.
                   </p>
                 </div>
 
@@ -239,7 +239,7 @@ export default function CheckoutPage() {
 
             <div className="text-center text-sm text-gray-500 space-y-1">
               <p>🚚 Estimated delivery: 3-7 business days</p>
-              <p>📞 We'll call you before delivery</p>
+              <p>📞 We&apos;ll call you before delivery</p>
               <p>💰 Pay cash on delivery</p>
             </div>
           </CardContent>

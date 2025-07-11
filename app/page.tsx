@@ -1,7 +1,9 @@
 "use client"
 
 import { HeroCarousel } from "@/components/hero-carousel"
+import { FeaturesSection } from "@/components/features-section"
 import { CircularCategories } from "@/components/circular-categories"
+import { ProductShowcase } from "@/components/product-showcase"
 import { ProductCarousel } from "@/components/product-carousel"
 import { ShopByRoom } from "@/components/shop-by-room"
 import { OurClients } from "@/components/our-clients"
@@ -103,8 +105,10 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroCarousel />
+      <FeaturesSection />
       <CircularCategories />
-      <main className="container mx-auto px-4 py-16" id="products-section">
+      <ProductShowcase />
+      <main className="container mx-auto px-4 py-8" id="products-section">
         <ProductCarousel
           products={products}
           title="Best Seller Products"

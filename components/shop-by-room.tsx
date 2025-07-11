@@ -62,7 +62,7 @@ export function ShopByRoom() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-8 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div
